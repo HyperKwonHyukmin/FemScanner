@@ -1,0 +1,81 @@
+# ===== Build Output =====
+bin/
+obj/
+out/
+publish/
+*.dll
+*.exe
+*.pdb
+*.deps.json
+*.runtimeconfig.json
+
+# ===== IDE =====
+.vs/
+.vscode/
+.idea/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.rsuser
+.ionide/
+
+# ===== Environment =====
+.env
+.env.*
+appsettings.local.json
+appsettings.*.local.json
+secrets.json
+
+# ===== Logs =====
+*.log
+*.log.*
+
+# ===== NuGet =====
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+packages/
+
+# ===== Test Results =====
+TestResults/
+coverage/
+*.trx
+*.coverage
+*.coveragexml
+CoverletSourceRootsMapping_*
+
+# ===== Custom: Nastran Analysis Files =====
+# Nastran 해석 결과 파일 (대용량, 바이너리)
+*.DBALL
+*.MASTER
+*.IFPDAT
+*.op2
+*.op2.*
+*.f04
+*.f04.*
+*.f06
+*.f06.*
+
+# ===== Custom: FemScanner 출력 JSON =====
+# 실행 결과로 생성되는 JSON (소스가 아님)
+*_validation.json
+*_f06_summary.json
+
+# ===== MCP / Claude =====
+.mcp.json.bak
+shrimp_data/
+shrimp-rules.md
+
+# ===== Node.js (MCP 서버) =====
+node_modules/
+package-lock.json
+npm-debug.log*
+
+# ===== Windows =====
+Thumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+nul

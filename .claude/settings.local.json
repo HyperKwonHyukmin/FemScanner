@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__shrimp-task-manager__init_project_rules",
+      "mcp__shrimp-task-manager__process_thought",
+      "mcp__shrimp-task-manager__plan_task",
+      "mcp__shrimp-task-manager__analyze_task",
+      "mcp__shrimp-task-manager__reflect_task",
+      "mcp__shrimp-task-manager__split_tasks",
+      "mcp__shrimp-task-manager__list_tasks",
+      "mcp__shrimp-task-manager__execute_task",
+      "Bash(dotnet new:*)",
+      "Bash(dotnet sln:*)",
+      "Bash(dotnet add:*)",
+      "Bash(mkdir:*)",
+      "Bash(dotnet build:*)",
+      "Bash(dotnet test:*)",
+      "mcp__shrimp-task-manager__verify_task",
+      "Bash(dotnet run:*)",
+      "Bash(echo \"Exit: $?\")",
+      "Read(//tmp/**)",
+      "Read(//tmp/femscan_out/**)",
+      "Bash(dotnet format:*)",
+      "Bash(python3 -c \" import json with open\\('testBDF/3515-35020-struData-READONLY_20250731.json', encoding='utf-8'\\) as f: d = json.load\\(f\\) print\\('warnings in model not accessible from json'\\) \")",
+      "Bash(python3 -c \" import json with open\\('testBDF/3515-35020-struData-READONLY_20250731_validation.json', encoding='utf-8'\\) as f: d = json.load\\(f\\) print\\('validation entries:', len\\(d\\)\\) \")"
+    ]
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "shrimp-task-manager"
+  ]
+}

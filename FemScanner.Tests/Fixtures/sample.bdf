@@ -1,0 +1,26 @@
+$ FemScanner sample BDF - 정상 모델
+$ GRID + CQUAD4 + PSHELL + MAT1 + FORCE + SPC1 + CaseControl 포함
+TITLE = FemScanner Integration Test Model
+SUBCASE 1
+  LOAD = 10
+  SPC = 20
+  DISP = ALL
+  STRESS = ALL
+BEGIN BULK
+$ Grids
+GRID    1       0       0.0     0.0     0.0
+GRID    2       0       1.0     0.0     0.0
+GRID    3       0       1.0     1.0     0.0
+GRID    4       0       0.0     1.0     0.0
+$ Elements
+CQUAD4  1       1       1       2       3       4
+CTRIA3  2       1       1       2       3
+$ Properties
+PSHELL  1       1       0.01
+$ Materials
+MAT1    1       2.1E11  0.0     0.3     7850.0
+$ Loads
+FORCE   10      1       1       0       1000.0  0.0     0.0     1.0
+$ Boundary Conditions
+SPC1    20      123456  1       2       3       4
+ENDDATA

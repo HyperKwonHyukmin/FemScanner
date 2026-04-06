@@ -1,0 +1,13 @@
+$ FemScanner sample BDF - 오류 케이스
+$ 미존재 Grid 참조, 미존재 Property 참조, 미존재 Material 참조 포함
+BEGIN BULK
+$ Grid 1만 존재 (2,3,4 없음)
+GRID    1       0       0.0     0.0     0.0
+$ Element이 존재하지 않는 Grid 2,3,4 참조 → ElementRule Error
+CQUAD4  1       1       1       2       3       4
+$ Property가 존재하지 않는 Material 99 참조 → PropertyRule Error
+PSHELL  1       99      0.01
+$ Material 없음 (99번 없음)
+$ Load가 존재하지 않는 Grid 99 참조 → LoadRule Error
+FORCE   10      1       99      0       1000.0  0.0     0.0     1.0
+ENDDATA
