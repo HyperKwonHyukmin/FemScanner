@@ -6,6 +6,7 @@ using FemScanner.Models.Grids;
 using FemScanner.Models.Materials;
 using FemScanner.Models.Properties;
 using FemScanner.Parsers;
+using FemScanner.Validators;
 
 namespace FemScanner.Tests;
 
@@ -14,10 +15,10 @@ public class JsonExporterTests : IDisposable
     private readonly string _tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
     [Fact]
-    public void Export_ModelJson_ContainsRequiredKeys()
+    public void ExportModel_Json_ContainsRequiredKeys()
     {
         var model = BuildSampleModel();
-        new JsonExporter().Export(model, [], _tempDir, "test");
+        new JsonExporter().ExportModel(model, _tempDir, "test");
 
         string json = File.ReadAllText(Path.Combine(_tempDir, "test.json"));
         using var doc = JsonDocument.Parse(json);
@@ -33,50 +34,68 @@ public class JsonExporterTests : IDisposable
     }
 
     [Fact]
-    public void Export_ValidationJson_ContainsRequiredFields()
+    public void ExportValidation_Json_ContainsRequiredFields()
     {
-        var model = new BdfModel();
         var results = new List<ValidationResult>
         {
             new() { Severity = ValidationSeverity.Error, CardType = "GRID", CardId = 1, FieldName = "ID", Message = "중복" }
         };
-        new JsonExporter().Export(model, results, _tempDir, "test");
+        var report = BuildReport(new BdfModel(), results, new BdfValidator());
+        new JsonExporter().ExportValidation(report, _tempDir, "test");
 
-        string json = File.ReadAllText(Path.Combine(_tempDir, "test_validation.json"));
+        string json = File.ReadAllText(Path.Combine(_tempDir, "test_validation_step1.json"));
         using var doc = JsonDocument.Parse(json);
-        var first = doc.RootElement[0];
+        var root = doc.RootElement;
 
+        Assert.True(root.TryGetProperty("status", out _));
+        Assert.True(root.TryGetProperty("summary", out _));
+        Assert.True(root.TryGetProperty("parsingSummary", out _));
+        Assert.True(root.TryGetProperty("rulesChecked", out _));
+        Assert.True(root.TryGetProperty("validationResults", out _));
+
+        var first = root.GetProperty("validationResults")[0];
         Assert.True(first.TryGetProperty("severity", out _));
         Assert.True(first.TryGetProperty("cardType", out _));
         Assert.True(first.TryGetProperty("message", out _));
     }
 
     [Fact]
-    public void Export_ModelJson_IsValidJson()
+    public void ExportModel_Json_IsValidJson()
     {
         var model = BuildSampleModel();
-        new JsonExporter().Export(model, [], _tempDir, "test");
+        new JsonExporter().ExportModel(model, _tempDir, "test");
 
         string json = File.ReadAllText(Path.Combine(_tempDir, "test.json"));
-        // 유효한 JSON이면 예외 없이 파싱됨
         var doc = JsonDocument.Parse(json);
         Assert.Equal(JsonValueKind.Object, doc.RootElement.ValueKind);
     }
 
     [Fact]
-    public void Export_PolymorphicElement_ContainsCardType()
+    public void ExportModel_PolymorphicElement_ContainsCardType()
     {
         var model = new BdfModel();
         model.Grids.Add(new Grid { Id = 1 });
         model.Elements.Add(new CQuad4 { Id = 1, PropertyId = 1, NodeIds = [1, 1, 1, 1] });
-        new JsonExporter().Export(model, [], _tempDir, "test");
+        new JsonExporter().ExportModel(model, _tempDir, "test");
 
         string json = File.ReadAllText(Path.Combine(_tempDir, "test.json"));
         Assert.Contains("CQUAD4", json);
     }
 
     [Fact]
-    public void Export_IntegrationWithParser_ProducesFiles()
+    public void ExportValidation_NoErrors_StatusIsPass()
+    {
+        var model = new BdfModel();
+        var report = BuildReport(model, [], new BdfValidator());
+        new JsonExporter().ExportValidation(report, _tempDir, "model");
+
+        string json = File.ReadAllText(Path.Combine(_tempDir, "model_validation_step1.json"));
+        using var doc = JsonDocument.Parse(json);
+        Assert.Equal("pass", doc.RootElement.GetProperty("status").GetString());
+    }
+
+    [Fact]
+    public void ExportValidation_IntegrationWithParser_ProducesFiles()
     {
         string[] bdf =
         [
@@ -88,10 +107,36 @@ public class JsonExporterTests : IDisposable
             "ENDDATA"
         ];
         var model = new BdfParser().Parse(bdf);
-        new JsonExporter().Export(model, [], _tempDir, "model");
+        var validator = new BdfValidator();
+        var results = validator.Validate(model);
+
+        new JsonExporter().ExportModel(model, _tempDir, "model");
+        new JsonExporter().ExportValidation(BuildReport(model, results, validator), _tempDir, "model");
 
         Assert.True(File.Exists(Path.Combine(_tempDir, "model.json")));
-        Assert.True(File.Exists(Path.Combine(_tempDir, "model_validation.json")));
+        Assert.True(File.Exists(Path.Combine(_tempDir, "model_validation_step1.json")));
+    }
+
+    private static ValidationReport BuildReport(
+        BdfModel model,
+        IReadOnlyList<ValidationResult> results,
+        BdfValidator validator)
+    {
+        int errors   = results.Count(r => r.Severity == ValidationSeverity.Error);
+        int warnings = results.Count(r => r.Severity == ValidationSeverity.Warning);
+        string status = errors > 0 ? "error" : warnings > 0 ? "warning" : "pass";
+        return new ValidationReport
+        {
+            Step            = 1,
+            StepName        = "BDF 기본 검토",
+            GeneratedAt     = DateTimeOffset.Now,
+            SourceFile      = "test.bdf",
+            Status          = status,
+            Summary         = new ValidationSummary { TotalErrors = errors, TotalWarnings = warnings },
+            ParsingSummary  = new ParsingSummary { ParserWarnings = model.Warnings.ToList() },
+            RulesChecked    = validator.RuleNames.Select(n => new RuleCheckResult { Rule = n, Status = "pass" }).ToList(),
+            ValidationResults = results.ToList(),
+        };
     }
 
     private static BdfModel BuildSampleModel()

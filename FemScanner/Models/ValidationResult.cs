@@ -1,6 +1,9 @@
+using System.Text.Json.Serialization;
+
 namespace FemScanner.Models;
 
 /// <summary>검증 결과 심각도</summary>
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum ValidationSeverity
 {
     Error,

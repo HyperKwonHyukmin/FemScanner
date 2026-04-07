@@ -93,6 +93,10 @@ public class BdfParser
             if (tokens.Length == 0)
                 continue;
 
+            // continuation 라인(첫 필드가 비어있거나 '+' 로 시작): 조용히 스킵
+            if (tokens[0].Length == 0 || tokens[0].StartsWith('+'))
+                continue;
+
             string cardName = tokens[0].TrimEnd('*');
             if (_parsers.TryGetValue(cardName, out var parser))
             {
