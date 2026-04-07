@@ -1,0 +1,101 @@
+{
+  "version": "1.0",
+  "step": 1,
+  "stepName": "BDF \uAE30\uBCF8 \uAC80\uD1A0",
+  "generatedAt": "2026-04-07T15:17:04.836094+09:00",
+  "sourceFile": "3515-35020-struData-READONLY_20250731.bdf",
+  "status": "pass",
+  "summary": {
+    "totalErrors": 0,
+    "totalWarnings": 0,
+    "parserWarnings": 0,
+    "f06Fatals": 0,
+    "f06Warnings": 0
+  },
+  "parsingSummary": {
+    "cardCounts": {
+      "grid": 3397,
+      "element": 3839,
+      "property": 43,
+      "material": 28,
+      "load": 1,
+      "boundaryCondition": 186,
+      "subcase": 1,
+      "param": 2
+    },
+    "elementBreakdown": {
+      "CBEAM": 3491,
+      "RBE2": 271,
+      "CONM2": 77
+    },
+    "propertyBreakdown": {
+      "PBEAML": 43
+    },
+    "materialBreakdown": {
+      "MAT1": 28
+    },
+    "loadBreakdown": {
+      "GRAV": 1
+    },
+    "bcBreakdown": {
+      "SPC": 186
+    },
+    "parserWarnings": [],
+    "boundingBox": {
+      "xMin": 77470,
+      "xMax": 99360,
+      "yMin": -2050,
+      "yMax": 12250,
+      "zMin": 32445,
+      "zMax": 39877
+    },
+    "orphanNodes": 0,
+    "orphanProperties": 3,
+    "orphanMaterials": 0
+  },
+  "rulesChecked": [
+    {
+      "rule": "GridRule",
+      "status": "pass",
+      "checkedCount": 3397,
+      "errorCount": 0,
+      "warningCount": 0
+    },
+    {
+      "rule": "ElementRule",
+      "status": "pass",
+      "checkedCount": 3839,
+      "errorCount": 0,
+      "warningCount": 0
+    },
+    {
+      "rule": "PropertyRule",
+      "status": "pass",
+      "checkedCount": 43,
+      "errorCount": 0,
+      "warningCount": 0
+    },
+    {
+      "rule": "MaterialRule",
+      "status": "pass",
+      "checkedCount": 28,
+      "errorCount": 0,
+      "warningCount": 0
+    },
+    {
+      "rule": "LoadRule",
+      "status": "pass",
+      "checkedCount": 1,
+      "errorCount": 0,
+      "warningCount": 0
+    },
+    {
+      "rule": "BcRule",
+      "status": "pass",
+      "checkedCount": 186,
+      "errorCount": 0,
+      "warningCount": 0
+    }
+  ],
+  "validationResults": []
+}

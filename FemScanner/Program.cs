@@ -165,8 +165,7 @@ try
     // ── [단계 2] Nastran 해석 검토 ────────────────────────────────────────────
     if (runNastran)
     {
-        string tempDir      = Path.GetTempPath();
-        string checkBdfPath = Path.Combine(tempDir, $"{baseName}_check.bdf");
+        string checkBdfPath = Path.Combine(outputDir, $"{baseName}_check.bdf");
         string? checkF06Path = null;
 
         try
@@ -241,8 +240,8 @@ try
         }
         finally
         {
+            // check BDF는 임시 파일이므로 삭제, F06은 결과 확인용으로 보존
             TryDelete(checkBdfPath);
-            if (checkF06Path is not null) TryDelete(checkF06Path);
         }
     }
 

@@ -68,6 +68,10 @@ public class F06Parser
 
     private static F06Level? DetectLevel(string line)
     {
+        // Nastran 저작권 배너는 무시 (Warning 문자열을 포함하지만 실제 경고가 아님)
+        if (line.Contains("copyright law", StringComparison.OrdinalIgnoreCase))
+            return null;
+
         // USER WARNING 먼저 확인 (WARNING의 하위 문자열이므로)
         if (line.Contains("USER WARNING", StringComparison.OrdinalIgnoreCase))
             return F06Level.Warning;

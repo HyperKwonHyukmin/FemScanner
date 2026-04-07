@@ -1,0 +1,39 @@
+{
+  "version": "1.0",
+  "step": 2,
+  "stepName": "Nastran \uD574\uC11D \uAC80\uD1A0",
+  "generatedAt": "2026-04-07T15:09:23.8635053+09:00",
+  "sourceFile": "3515-35020-struData-READONLY_20250731.bdf",
+  "status": "error",
+  "summary": {
+    "totalErrors": 0,
+    "totalWarnings": 0,
+    "parserWarnings": 0,
+    "f06Fatals": 1,
+    "f06Warnings": 2
+  },
+  "f06Summary": {
+    "fatalCount": 1,
+    "warningCount": 2,
+    "messages": [
+      {
+        "level": "warning",
+        "lineNumber": 6,
+        "message": "Warning: This computer program is protected by copyright law and international treaties.",
+        "context": " \r\n \r\n                      Warning: This computer program is protected by copyright law and international treaties.       \r\n                  Unauthorized use, reproduction or distribution of this computer program, or any portion of it, may \r\n                                          result in severe civil and criminal penalties.                             "
+      },
+      {
+        "level": "warning",
+        "lineNumber": 8968,
+        "message": "*** USER WARNING MESSAGE 4698 (DCMPD)",
+        "context": " *** SYSTEM INFORMATION MESSAGE 4159 (DFMSA)\r\n     THE DECOMPOSITION OF KLL      YIELDS A MAXIMUM MATRIX-TO-FACTOR-DIAGONAL RATIO OF    7.805098E\u002B15\r\n *** USER WARNING MESSAGE 4698 (DCMPD)\r\n     STATISTICS FOR DECOMPOSITION OF MATRIX KLL.\r\n     THE FOLLOWING DEGREES OF FREEDOM HAVE FACTOR DIAGONAL RATIOS GREATER THAN"
+      },
+      {
+        "level": "fatal",
+        "lineNumber": 8985,
+        "message": "*** USER FATAL MESSAGE 9050 (SUBDMAP SEKRRS)",
+        "context": "            1905                    R2                  -5.57901E\u002B15                   1.25085E\u002B08\r\n ^^^     \r\n *** USER FATAL MESSAGE 9050 (SUBDMAP SEKRRS)\r\n     RUN TERMINATED DUE TO EXCESSIVE PIVOT RATIOS IN MATRIX KLL.\r\n     USER ACTION: CONSTRAIN MECHANISMS WITH SPCI OR SUPORTI ENTRIES OR SPECIFY PARAM,BAILOUT,-1 TO CONTINUE THE RUN WITH MECHANISMS."
+      }
+    ]
+  }
+}
