@@ -69,11 +69,23 @@ public class BdfParserTests
     }
 
     [Fact]
-    public void Parse_NoBeginBulk_ReturnsEmptyModel()
+    public void Parse_NoBeginBulk_StartsBulkAtFirstSupportedBulkCard()
     {
-        string[] lines = ["GRID    1       0       0.0     0.0     0.0"];
+        string[] lines =
+        [
+            "SOL 101",
+            "CEND",
+            "  LOAD = 1",
+            "PARAM,GRDPNT,0",
+            "GRID           1         77590.0 11020.0 27646.0"
+        ];
         var model = new BdfParser().Parse(lines);
-        Assert.Empty(model.Grids);
+        Assert.Single(model.Params);
+        var grid = Assert.Single(model.Grids);
+        Assert.Equal(1, grid.Id);
+        Assert.Equal(77590.0, grid.X);
+        Assert.Equal(11020.0, grid.Y);
+        Assert.Equal(27646.0, grid.Z);
     }
 
     [Fact]
@@ -138,6 +150,58 @@ public class BdfParserTests
         Assert.IsType<PSolid>(model.Properties[1]);
         Assert.IsType<PBar>(model.Properties[2]);
         Assert.IsType<PRod>(model.Properties[3]);
+    }
+
+    [Fact]
+    public void Parse_PBeamL_WithContinuation_ParsesDimensions()
+    {
+        string[] lines =
+        [
+            "BEGIN BULK",
+            "PBEAML         1       1               L",
+            "           130.0   130.0    12.0    12.0     0.0",
+            "ENDDATA"
+        ];
+
+        var model = new BdfParser().Parse(lines);
+        var prop = Assert.IsType<PBeamL>(Assert.Single(model.Properties));
+
+        Assert.Equal(1, prop.Id);
+        Assert.Equal("L", prop.Type);
+        Assert.Equal([130.0, 130.0, 12.0, 12.0, 0.0], prop.Dimensions);
+    }
+
+    [Fact]
+    public void Parse_PBarL_WithContinuation_ParsesDimensions()
+    {
+        string header =
+            "PBARL".PadRight(8) +
+            "7".PadRight(8) +
+            "3".PadRight(8) +
+            "".PadRight(8) +
+            "BOX".PadRight(8);
+        string continuation =
+            "".PadRight(8) +
+            "100.0".PadRight(8) +
+            "50.0".PadRight(8) +
+            "8.0".PadRight(8) +
+            "8.0".PadRight(8) +
+            "0.0".PadRight(8);
+
+        string[] lines =
+        [
+            "BEGIN BULK",
+            header,
+            continuation,
+            "ENDDATA"
+        ];
+
+        var model = new BdfParser().Parse(lines);
+        var prop = Assert.IsType<PBarL>(Assert.Single(model.Properties));
+
+        Assert.Equal(7, prop.Id);
+        Assert.Equal("BOX", prop.Type);
+        Assert.Equal([100.0, 50.0, 8.0, 8.0, 0.0], prop.Dimensions);
     }
 
     [Fact]
